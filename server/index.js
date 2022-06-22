@@ -8,8 +8,9 @@ import session from 'koa-generic-session'
 import Redis from 'koa-redis'
 import json from 'koa-json'
 import dbConfig from './dbs/config'
-import passport from 'koa-passport'
-import users from './interface/user'
+import passport from './interface/utils/possport'
+import users from './interface/users'
+import proxy from 'http-proxy-middleware'
 
 const app = new Koa()
   app.keys = ['mt', 'keys']
@@ -53,13 +54,15 @@ async function start () {
   }
 
   app.use(users.routes()).use(users.allowedMethods())
-
+  
   app.use((ctx) => {
     ctx.status = 200
     ctx.respond = false // Bypass Koa's built-in response handling
     ctx.req.ctx = ctx // This might be useful later on, e.g. in nuxtServerInit or with nuxt-stash
     nuxt.render(ctx.req, ctx.res)
   })
+
+  
 
   app.listen(port, host)
   consola.ready({

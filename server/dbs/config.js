@@ -24,7 +24,9 @@ module.exports = { //连接数据库
             }
         },
         get expire() {// 设置过期时间 60 秒
-            return new Date().getTime() + 60 * 60 * 1000 
+            return () => {
+                return new Date().getTime() + 60 * 1000 
+            }
         }
     }
 }
